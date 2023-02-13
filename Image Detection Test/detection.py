@@ -11,6 +11,20 @@ def read_image(url: str) -> np.array:
 
     return image_np
 
+# capture image from web cam
+def capture_webcam_image():
+    cam_port = 0
+    cam = VideoCapture(cam_port)
+    result, image = cam.read()
+    if result:
+        imshow("WebCamImage", image)
+        imwrite("WebCamImage.png", image) # saving image in local storage
+        waitKey(0)
+        destroyWindow("GeeksForGeeks")
+        # TODO: return image path
+    else:
+        print("No image detected. Please! try again")
+
 def scale_image(image_np: np.array):
     image_grayscale = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
     image_blurred = cv2.GaussianBlur(image_grayscale, (5, 5), 0)
@@ -21,7 +35,7 @@ def scale_image(image_np: np.array):
 
     return image_morph_close
 
-def detect_cascade(image_array, image_normalized, source_xml: str):
+def detect_cascade(image_array, image_normalized, source_xml: str, image):
     cascade_classifier = cv2.CascadeClassifier(source_xml)
     cars_found_array = cascade_classifier.detectMultiScale(image_normalized, 1.1, 1)
 
@@ -29,10 +43,16 @@ def detect_cascade(image_array, image_normalized, source_xml: str):
         cv2.rectangle(image_array, (x, y), (x + width, y + height), (0, 0, 255), 2)
     
     image = Image.fromarray(image_array)
-    image.save('Yay.jpg')
+    image.save(image)
 
 if __name__ == '__main__':
-    url = input('Enter Image URL: ')
+    prompt = input('Do you want to use your web cam to produce an image? (Y/N)')
+    if(prompt == 'Y'):
+        url = capture_webcam_image()
+    else:
+        url = input('Enter Image URL: ')
+        
     image_array = read_image(url)
     image_scaled = scale_image(image_array)
-    detect_cascade(image_array, image_scaled, 'Required Files/cars.xml')
+
+    detect_cascade(image_array, image_scaled, 'Required Files/cars.xml', 'WebCamImage.png')
