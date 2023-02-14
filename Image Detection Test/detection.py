@@ -14,16 +14,15 @@ def read_image(url: str) -> np.array:
 # capture image from web cam
 def capture_webcam_image():
     cam_port = 0
-    cam = VideoCapture(cam_port)
-    result, image = cam.read()
-    if result:
-        imshow("WebCamImage", image)
-        imwrite("WebCamImage.png", image) # saving image in local storage
-        waitKey(0)
-        destroyWindow("GeeksForGeeks")
-        # TODO: return image path
-    else:
-        print("No image detected. Please! try again")
+    cam = cv2.VideoCapture(cam_port)
+    while(True):
+        result, image = cam.read()
+        cv2.imshow("WebCamImage", image)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cam.release()
+    cv2.destroyAllWindows()
+    # TODO: return image path
 
 def scale_image(image_np: np.array):
     image_grayscale = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
