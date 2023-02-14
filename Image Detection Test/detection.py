@@ -16,7 +16,7 @@ def read_image(url: str) -> np.array:
 
 
 def capture_webcam_image():
-    cam_port = 0
+    cam_port = 1
     cam = cv2.VideoCapture(cam_port)
     while (True):
         result, image = cam.read()
@@ -82,7 +82,7 @@ def detect_cascade(image_array, image_normalized, source_xml: str, image, url=Fa
 
 if __name__ == '__main__':
     prompt = input(
-        'Do you want to use your web cam to produce an image? (Y/N)')
+        'Do you want to use your web cam to produce an image? (Y/N): ')
     if (prompt == 'Y'):
         url = capture_webcam_image()
     else:
