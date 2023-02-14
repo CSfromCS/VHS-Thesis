@@ -13,10 +13,12 @@ def read_image(url: str) -> np.array:
     return image_np
 
 # capture image from web cam
+
+
 def capture_webcam_image():
     cam_port = 0
     cam = cv2.VideoCapture(cam_port)
-    while(True):
+    while (True):
         result, image = cam.read()
         cv2.imshow("WebCamImage", image)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -37,6 +39,7 @@ def scale_image(image_np: np.array):
 
     return image_morph_close
 
+
 def detect_cascade(image_array, image_normalized, source_xml: str, image, url=False):
     cascade_classifier = cv2.CascadeClassifier(source_xml)
     cars_found_array = cascade_classifier.detectMultiScale(
@@ -48,7 +51,7 @@ def detect_cascade(image_array, image_normalized, source_xml: str, image, url=Fa
 
     image = Image.fromarray(image_array)
     image.save("Output Files/" + url[-10:] +
-               "_processed.jpg" if url else 'Test.jpg')
+               "_processed.jpg" if url else 'Output Files/Test.jpg')
 
 
 # def video_part():
@@ -78,13 +81,15 @@ def detect_cascade(image_array, image_normalized, source_xml: str, image, url=Fa
 
 
 if __name__ == '__main__':
-    prompt = input('Do you want to use your web cam to produce an image? (Y/N)')
-    if(prompt == 'Y'):
+    prompt = input(
+        'Do you want to use your web cam to produce an image? (Y/N)')
+    if (prompt == 'Y'):
         url = capture_webcam_image()
     else:
         url = input('Enter Image URL: ')
-        
+
     image_array = read_image(url)
     image_scaled = scale_image(image_array)
 
-    detect_cascade(image_array, image_scaled, 'Required Files/cars.xml', 'WebCamImage.png')
+    detect_cascade(image_array, image_scaled,
+                   'Required Files/cars.xml', 'WebCamImage.png')
