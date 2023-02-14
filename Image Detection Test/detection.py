@@ -12,6 +12,19 @@ def read_image(url: str) -> np.array:
 
     return image_np
 
+# capture image from web cam
+def capture_webcam_image():
+    cam_port = 0
+    cam = cv2.VideoCapture(cam_port)
+    while(True):
+        result, image = cam.read()
+        cv2.imshow("WebCamImage", image)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cam.release()
+    cv2.destroyAllWindows()
+    # TODO: return image path
+
 
 def scale_image(image_np: np.array):
     image_grayscale = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
@@ -24,8 +37,7 @@ def scale_image(image_np: np.array):
 
     return image_morph_close
 
-
-def detect_cascade(image_array, image_normalized, source_xml: str, url=False):
+def detect_cascade(image_array, image_normalized, source_xml: str, image, url=False):
     cascade_classifier = cv2.CascadeClassifier(source_xml)
     cars_found_array = cascade_classifier.detectMultiScale(
         image_normalized, 1.1, 1)
@@ -39,36 +51,40 @@ def detect_cascade(image_array, image_normalized, source_xml: str, url=False):
                "_processed.jpg" if url else 'Test.jpg')
 
 
-def video_part():
-    cascade_src = 'Required Files/cars.xml'
-    video_src = 'Cars.mp4'
+# def video_part():
+#     cascade_src = 'Required Files/cars.xml'
+#     video_src = 'Cars.mp4'
 
-    cap = cv2.VideoCapture(video_src)
-    car_cascade = cv2.CascadeClassifier(cascade_src)
-    video = cv2.VideoWriter('Output Files/result.avi',
-                            cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 20.0, (int(cap.get(3)), int(cap.get(4))))
-# cant make d video output work :< using m1
+#     cap = cv2.VideoCapture(video_src)
+#     car_cascade = cv2.CascadeClassifier(cascade_src)
+#     video = cv2.VideoWriter('Output Files/result.avi',
+#                             cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 20.0, (int(cap.get(3)), int(cap.get(4))))
+# # cant make d video output work :< using m1
 
-    while True:
-        ret, img = cap.read()
+#     while True:
+#         ret, img = cap.read()
 
-        if (type(img) == type(None)):
-            break
+#         if (type(img) == type(None)):
+#             break
 
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        cars = car_cascade.detectMultiScale(gray, 1.1, 2)
+#         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#         cars = car_cascade.detectMultiScale(gray, 1.1, 2)
 
-        for (x, y, w, h) in cars:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 255), 2)
+#         for (x, y, w, h) in cars:
+#             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
-    video.write(img)
-    video.release()
+#     video.write(img)
+#     video.release()
 
 
 if __name__ == '__main__':
-    # url = input('Enter Image URL: ')
-    # image_array = read_image(url)
-    # image_scaled = scale_image(image_array)
-    # detect_cascade(image_array, image_scaled, 'Required Files/cars.xml', url)
+    prompt = input('Do you want to use your web cam to produce an image? (Y/N)')
+    if(prompt == 'Y'):
+        url = capture_webcam_image()
+    else:
+        url = input('Enter Image URL: ')
+        
+    image_array = read_image(url)
+    image_scaled = scale_image(image_array)
 
-    # video_part()
+    detect_cascade(image_array, image_scaled, 'Required Files/cars.xml', 'WebCamImage.png')
