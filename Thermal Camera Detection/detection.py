@@ -5,7 +5,8 @@ from math import floor
 
 def train_model(train_set_path: str):
     model = YOLO()
-    model.train(data=train_set_path, epochs=50, imgsz=[320,240])
+    
+    model.train(data=train_set_path, epochs=50, imgsz=[320,240], dropout=0.2, lr0=0.001)
 
     return model
 
