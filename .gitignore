@@ -127,7 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+Finalized Models/Out.csv
+Finalized Models/Updated Out.csv
 
 # Others
 .DS_Store
 Out.csv
+.DS_Store
+Data Preprocessing/Out.csv
