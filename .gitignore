@@ -131,3 +131,8 @@ dmypy.json
 label-studio/
 Finalized Models/Out.csv
 Finalized Models/Updated Out.csv
+
+# Others
+.DS_Store
+Out.csv
+Data Preprocessing/Out.csv
